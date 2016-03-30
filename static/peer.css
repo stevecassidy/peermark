@@ -1,0 +1,58 @@
+
+body {
+  background-color: #CCA;
+  font-family: Arial, sans-serif;
+  font-size: 11pt;
+}
+table {
+	width: 80%;
+}
+
+td {
+	text-align: center;
+}
+td.radio {
+	border: 1px solid black;
+}
+td textarea {
+	width: 100%;
+}
+#help {
+	font-size: small;
+	float: right;
+}
+label {
+	font-size: small;
+}
+.message {
+	float: left;
+}
+
+fieldset
+{
+   float: left;
+   padding: 0;
+   height: 3em;
+}
+ul.likert
+{
+    list-style-type: none;
+    margin: 0;
+    padding-right: 1em;
+}
+.likert li
+{
+    float: left;
+    text-align: left;
+    list-style-type: none;
+}
+fieldset textarea
+{
+    width: 30em;
+}
+
+#footnote {
+    clear:both;
+    text-align: center;
+    padding-top:1em;
+}

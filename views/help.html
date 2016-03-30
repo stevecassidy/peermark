@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>COMP249 Assignment 1 Peer Marking</title>
+    <link rel="stylesheet" href="/static/peer.css" type="text/css">
+  </head>
+  <body>
+
+    <div class="content">
+
+% if defined('message'):
+    <p>{{message}}</p>
+% end
+
+% if defined('loginform'):
+    <form id='loginform' class="navbar-form navbar-right" role="login" method='post' action='/login'>
+
+        <table style="width:30%">
+            <tr>
+              <td><input type="text" name='email' size="40" placeholder="Student Email"></td>
+              <td><input type="password" name='sid' class="form-control" placeholder="Student ID"></td>
+                <td><input type="submit" class="btn btn-default" value='Login' ></td>
+            </tr>
+        </table>
+    </form>
+% end
+
+      <h1>COMP249 Web Technology</h1>
+      <h3>Assignment 1 Peer Marking</h3>
+
+      <p>The peer marking page allows you to rate the work of the other students
+      in COMP249 for Assignment 1. The final ratings given will be used as 
+      part of the final score for the assignment.</p>
+ 
+      <p>To login please use your student email address (xxx@students.mq.edu.au)
+        and your student ID as a password.  Of course, if you know someone else's
+        email and student ID you could
+      vote for them, but that wouldn't be nice. If you think someone has
+      impersonated you, please let me know.</p>
+      
+      <p>Once you login, you will see a page with two frames. At the top is a marking
+        form, at the bottom is one of the submissions from another student.
+        You are asked to review the submission and provide a mark on three criteria.
+        When you submit your marks, another submission will be chosen for you to mark.
+        You will only be allowed to mark 20
+      submissions at most.</p>
+
+      <p>You are asked to rate the stylesheet on three criteria:</p>
+      
+      <ul>
+
+        <li><strong>Overall design</strong> - the design looks good and presents the images
+            in a clear and useable way,
+        text is readable, navigation links are obvious.</li>
+
+        <li><strong>Originality and Creativity</strong> - the design shows some creativity,
+          not just a cut and paste from other websites or page templates.</li>
+
+        <li><strong>Use of HTML/CSS</strong> - the submission made good use of HTML and CSS
+          technology to achieve the design rather than just presenting a minimal solution
+          (Wow, how did they do that == Good).</li>
+
+      </ul>
+
+      <p>You are also asked to provide some feedback to the student. Use 
+      this to make a comment if you want to say more than the scales
+      allow.  Try to imagine what you'd like to hear about your own 
+      work.  Please don't insult anyone; I reserve the right to filter
+      the comments if needed.</p>
+      
+      <p>Please give some time to considering your rating.</p>
+      
+      <p><strong>Cheating</strong> If it is obvious that this process
+      has been abused then I won't use the results in marking the
+      assignment.
+      Please respect this process and rate the work of your peers fairly.</p>
+
+        <p>The final marks for each student will be based on the marks you provide. We will
+        remove obvious outlier marks and we will moderate the final results to make sure
+        they are appropriate.</p>
+
+      <p>Please send comments or problems to <a
+      href="mailto:Steve.Cassidy@mq.edu.au">Steve Cassidy</a></p>
+
+  </body>
+</html>
