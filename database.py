@@ -116,6 +116,3 @@ if __name__=='__main__':
     # if we call this script directly, create the database and make sample data
     db = COMP249Db()
     db.create_tables()
-
-    csvfile = 'students.csv'
-    db.import_users(csvfile)

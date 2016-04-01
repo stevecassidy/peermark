@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mark Report</title>
+</head>
+<body>
+
+    <h1>Marking Report</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Student</th>
+            <th>Count</th>
+            <th>Design</th>
+            <th>Creative</th>
+            <th>Technology</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+% for row in marks:
+    <tr>
+        <th><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></th>
+        <td>{{round(row[1],1)}}</td>
+        <td>{{round(row[2],1)}}</td>
+        <td>{{round(row[3],1)}}</td>
+        <td>{{round(row[4],1)}}</td>
+        <td>{{round((row[2]+row[3]+row[4])/3, 1)}}</td>
+    </tr>
+% end
+    </table>
+
+</body>
+</html>

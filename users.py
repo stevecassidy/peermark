@@ -192,3 +192,21 @@ def add_marks(db, useremail, design, creative, tech, feedback):
 
     # choose someone else for this user to mark
     choose_submission(db, useremail)
+
+
+def mark_report(db):
+    """Generate a report on the marks entered so far
+    for each submission give the count and average marks
+    Return a list of tuples, one per submission
+    (sid, count, design, creative, tech)
+        """
+
+    sql = """SELECT submission, count(voter) as count, avg(design), avg(creative), avg(tech)
+    FROM marks
+    GROUP BY submission
+    ORDER BY count DESC"""
+
+    cursor = db.cursor()
+    cursor.execute(sql)
+
+    return cursor.fetchall()
