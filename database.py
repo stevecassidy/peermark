@@ -97,6 +97,8 @@ CREATE TABLE marks (
 
         sql = "INSERT into users (email, sid, path, hash) values (?, ?, ?, ?)"
 
+        usersql = "SELECT sid FROM users WHERE sid=?"
+
         with open(csvfile) as fd:
             reader = csv.DictReader(fd)
             for row in reader:
@@ -104,10 +106,16 @@ CREATE TABLE marks (
                 sid = row['ID number']
                 hash = self.encode(sid)
 
-                if row['Status'].strip() == 'Submitted for grading':
-                    path = paths[sid]
-                    cursor.execute(sql, (email, sid, path, hash))
-                    print(email, sid, path, hash)
+                if row['Status'].startswith("Submitted"):
+
+                    cursor.execute(usersql, (sid,))
+                    usersid = cursor.fetchone()
+
+                    if usersid == None:
+                        path = paths[sid]
+                        cursor.execute(sql, (email, sid, path, hash))
+                        print(email, sid, path, hash)
+
 
 
         self.commit()
