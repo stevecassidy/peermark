@@ -9,6 +9,16 @@
     <h1>Marking Report</h1>
 
     <table>
+        <tbody>
+        <tr><th>Number of Submissions</th><td>{{stats['students']}}</td></tr>
+        <tr><th>Number Marked</th><td>{{stats['marked']}}</td></tr>
+        <tr><th>Number of Students who have marked</th><td>{{stats['voters']}}</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Marks</h2>
+
+    <table>
         <thead>
         <tr>
             <th>Student</th>
@@ -30,6 +40,18 @@
     </tr>
 % end
     </table>
+
+
+    <h2>Students with 1-1-1 marks</h2>
+
+    <table>
+        <tr><th>Student</th></tr>
+% for row in stats['singletons']:
+        <tr><td><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></td></tr>
+% end
+    </table>
+
+
 
 </body>
 </html>

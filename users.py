@@ -210,3 +210,33 @@ def mark_report(db):
     cursor.execute(sql)
 
     return cursor.fetchall()
+
+
+def stats(db):
+    """Generate marking statistics"""
+
+    result = dict()
+
+    cursor = db.cursor()
+    # number of voters
+    cursor.execute("SELECT count(voter) FROM marks GROUP BY voter")
+    if cursor:
+        result['voters'] = cursor.fetchone()[0]
+    else:
+        result['voters'] = 0
+
+    # number of submissions marked
+    cursor.execute("select count(submission) from ( SELECT submission FROM marks GROUP BY submission)")
+    if cursor:
+        result['marked'] = cursor.fetchone()[0]
+    else:
+        result['marked'] = 0
+
+    # number of submissions overall
+    cursor.execute("SELECT count(sid) FROM users")
+    result['students'] = cursor.fetchone()[0]
+
+    cursor.execute("select distinct submission from marks where design=1 and creative=1 and tech=1")
+    result['singletons'] = cursor.fetchall()
+
+    return result

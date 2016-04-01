@@ -217,8 +217,9 @@ def report():
     db = COMP249Db()
 
     marks = users.mark_report(db)
+    stats = users.stats(db)
 
-    return template("report", marks=marks)
+    return template("report", marks=marks, stats=stats)
 
 @application.route('/admin/view/<sid>/<filename:path>')
 def view_sid(sid, filename):
@@ -228,15 +229,17 @@ def view_sid(sid, filename):
 
     root = users.submission_path(db, sid)
 
-    print("PATH:", root)
 
     # root should contain index.html, if not, look deeper
     if not os.path.exists(os.path.join(root, 'index.html')):
 
         for dirpath, dirnames, filenames in os.walk(root):
+            print(dirpath, filenames)
             if 'index.html' in filenames:
                 root = dirpath
                 break
+
+    print("PATH:", root)
 
     return static_file_force(filename=filename, root=root)
 
