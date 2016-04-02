@@ -219,7 +219,7 @@ def stats(db):
 
     cursor = db.cursor()
     # number of voters
-    cursor.execute("SELECT count(voter) FROM marks GROUP BY voter")
+    cursor.execute("select count(voter) from (SELECT voter FROM marks GROUP BY voter)")
     if cursor:
         result['voters'] = cursor.fetchone()[0]
     else:
