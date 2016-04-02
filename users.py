@@ -105,10 +105,17 @@ def choose_submission(db, useremail):
     """Choose a random submission for a user and
         update the sessions table"""
 
-    marked = user_marked(db, useremail)
+    exclude = user_marked(db, useremail)
+    number_marked = len(exclude)
     cursor = db.cursor()
 
-    if len(marked) > MAX_MARKED:
+    # find submissions marked more than 5 times so we can exclude them
+    sql = "SELECT submission from (SELECT submission, count(voter) as count from marks group by submission) where count>5"
+    cursor.execute(sql)
+    exclude.extend([r[0] for r in cursor.fetchall()])
+
+
+    if number_marked > MAX_MARKED:
         chosen = 'COMPLETED'
     else:
         # choose a user who isn't me who I haven't rated before
@@ -118,13 +125,13 @@ def choose_submission(db, useremail):
 
         for row in cursor:
             chosen = row[0]
-            if not chosen in marked:
+            if chosen not in exclude:
                 break
 
     sql = "UPDATE sessions SET viewing=? WHERE useremail=?"
     cursor.execute(sql, (chosen, useremail))
 
-    print("Choosing: ", useremail, chosen)
+    #print("Choosing: ", useremail, chosen)
     db.commit()
 
 def user_viewing(db, useremail):

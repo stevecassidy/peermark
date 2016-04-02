@@ -135,7 +135,7 @@ def submission(hash, filename):
 
     root = users.submission_path(db, viewing)
 
-    print(root)
+    #print(root)
     # root should contain index.html, if not, look deeper
     if not os.path.exists(os.path.join(root, 'index.html')):
 
@@ -239,7 +239,7 @@ def view_sid(sid, filename):
                 root = dirpath
                 break
 
-    print("PATH:", root)
+    #print("PATH:", root)
 
     return static_file_force(filename=filename, root=root)
 
