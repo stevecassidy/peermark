@@ -208,10 +208,10 @@ def mark_report(db):
     (sid, count, design, creative, tech)
         """
 
-    sql = """SELECT submission, count(voter) as count, avg(design), avg(creative), avg(tech)
+    sql = """SELECT submission, count(voter) as count, avg(design) as d, avg(creative) as c, avg(tech) as t
     FROM marks
     GROUP BY submission
-    ORDER BY count DESC"""
+    ORDER BY d+c+t DESC"""
 
     cursor = db.cursor()
     cursor.execute(sql)
@@ -243,7 +243,7 @@ def stats(db):
     cursor.execute("SELECT count(sid) FROM users")
     result['students'] = cursor.fetchone()[0]
 
-    cursor.execute("select distinct submission from marks where design=1 and creative=1 and tech=1")
+    cursor.execute("select submission, count(submission) as count from marks where design=1 and creative=1 and tech=1 GROUP BY submission ORDER BY count DESC")
     result['singletons'] = cursor.fetchall()
 
     return result

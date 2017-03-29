@@ -135,7 +135,6 @@ def submission(hash, filename):
 
     root = users.submission_path(db, viewing)
 
-    #print(root)
     # root should contain index.html, if not, look deeper
     if not os.path.exists(os.path.join(root, 'index.html')):
 
@@ -229,6 +228,9 @@ def view_sid(sid, filename):
 
     root = users.submission_path(db, sid)
 
+    # temp hack to re-root submissions
+    root = os.path.basename(root)
+    root = os.path.join('submissions', root)
 
     # root should contain index.html, if not, look deeper
     if not os.path.exists(os.path.join(root, 'index.html')):

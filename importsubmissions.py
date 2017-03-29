@@ -11,7 +11,6 @@ from database import COMP249Db
 
 def Parser():
   the_parser = argparse.ArgumentParser(description="unpack an iLearn zip file")
-  the_parser.add_argument('--targetname', required=False, type=str, help="name for student submission files")
   the_parser.add_argument('zipfile', action="store", type=str, help="downloaded zip file")
   the_parser.add_argument('csvfile', action="store", type=str, help="downloaded csv grading file")
   the_parser.add_argument('targetdir', help="directory to store unpacked files")
@@ -23,7 +22,12 @@ if __name__=='__main__':
 
     args = Parser()
 
-    unpacked, problems = unpack_submissions(args.zipfile, args.targetdir, args.targetname, True)
+    unpacked, problems = unpack_submissions(args.zipfile, args.targetdir, expectzip=True)
+
+    if problems != []:
+        print("PROBLEMS")
+        for problem in problems:
+            print(problem)
 
     paths = dict()
     for sid in unpacked:

@@ -45,9 +45,9 @@
     <h2>Students with 1-1-1 marks</h2>
 
     <table>
-        <tr><th>Student</th></tr>
+        <tr><th>Student</th><th>Count</th></th></tr>
 % for row in stats['singletons']:
-        <tr><td><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></td></tr>
+        <tr><td><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></td><td>{{row[1]}}</td></tr>
 % end
     </table>
 
