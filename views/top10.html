@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COMP249 Assignment 1: Top 10</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+
+
+     <div class="container">
+
+      <div class="jumbotron">
+        <h1>COMP249 Web Design</h1>
+          <h2>Top 10 Submissions</h2>
+
+        <table class="table">
+            <tbody>
+            <tr><th>Number of Submissions</th><td>{{stats['students']}}</td></tr>
+            <tr><th>Number of Students who have marked</th><td>{{stats['voters']}}</td></tr>
+            </tbody>
+        </table>
+          <p>Assignment 1 for COMP249 asked the students to design the layout of the main page
+          of a microblogging application: Psst.   Students rated the submissions of their peers
+          on three scales: Design, Creativity, Technology.  Below are the top 10 submissions
+          as rated by the peer markers.</p>
+      </div>
+
+
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Student</th>
+                <th>Number of Peers who Marked</th>
+            </tr>
+            </thead>
+    % for row in marks[:10]:
+        <tr>
+            <th><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></th>
+            <td>{{row[1]}}</td>
+        </tr>
+    % end
+        </table>
+
+     <footer class="footer">
+         <hr>
+        <p class="pull-right">&copy; 2017 COMP249 Students</p>
+      </footer>
+
+     </div>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

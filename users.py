@@ -5,6 +5,7 @@ Created on Mar 26, 2012
 '''
 
 import bottle
+import statistics
 
 # this variable MUST be used as the name for the cookie used by this application
 COOKIE_NAME = 'sessionid'
@@ -219,6 +220,97 @@ def mark_report(db):
     return cursor.fetchall()
 
 
+def mark_dump(db):
+    """Return a dictionary with one key per submission
+    the value of each key is a dictionary with keys:
+
+     scores: a list of score tuples (d, c, t)
+     feedback: a list of feedback strings
+
+        """
+
+    sql = """SELECT submission, voter, design, creative, tech, feedback
+    FROM marks
+    ORDER BY submission"""
+
+    cursor = db.cursor()
+    cursor.execute(sql)
+
+    result = {}
+    sid = None
+    for row in cursor:
+        if not sid == row[0]:
+            if sid is not None:
+                result[sid] = {'scores': scores, 'feedback': feedback}
+            sid = row[0]
+            scores = []
+            feedback = []
+
+        scores.append((row[2], row[3], row[4]))
+        feedback.append(row[5])
+
+    result[sid] = {'scores': scores, 'feedback': feedback}
+
+    return result
+
+
+def discard_lowest_avg(scores):
+    """Return the mean score from this list of scores
+    after discarding the lowest score
+
+    >>> discard_lowest_avg([1, 2, 3])
+    2.5
+    >>> discard_lowest_avg([3, 2, 3])
+    3.0
+    >>> discard_lowest_avg([3, 2, 0])
+    2.5
+    >>> discard_lowest_avg([])
+    0
+    >>> discard_lowest_avg([1])
+    1
+    """
+    if scores == []:
+        return 0
+    elif len(scores) == 1:
+        return scores[0]
+    else:
+        return statistics.mean(sorted(scores)[1:])
+
+
+def aggregate_scores(results, resultkey, fn):
+    """Generate scores for each submission based on an aggregation
+    function.
+    Apply the given function to the list of scores for design, creative and tech
+    for each submission and store the mean of these using 'resultkey' in the
+    dictionary for this submission.
+
+    >>> results = {\
+                   'a': {'scores': [(1,1,1), (2,2,2), (3,3,3)], 'feedback': ['a', 'b', 'c']},\
+                   'b': {'scores': [(1,1,1), (2,2,2), (0,0,0)], 'feedback': ['a', 'b', 'c']}\
+                    }
+    >>> aggregate_scores(results, 'discard_score', discard_lowest_avg)
+    >>> results['a']['discard_score']
+    2.5
+    >>> results['b']['discard_score']
+    1.5
+    >>> aggregate_scores(results, 'mean', statistics.mean)
+    >>> results['a']['mean']
+    2.0
+    >>> results['b']['mean']
+    1.0
+    """
+
+    for key in results:
+        scores = results[key]['scores']
+        d = fn([s[0] for s in scores])
+        c = fn([s[1] for s in scores])
+        t = fn([s[2] for s in scores])
+
+        score = (d+c+t)/3
+
+        results[key][resultkey] = score
+
+
 def stats(db):
     """Generate marking statistics"""
 
@@ -247,3 +339,8 @@ def stats(db):
     result['singletons'] = cursor.fetchall()
 
     return result
+
+if __name__=='__main__':
+
+    import doctest
+    doctest.testmod()

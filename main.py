@@ -6,6 +6,7 @@ Created on Mar 28, 2016
 
 from bottle import Bottle, template, static_file, request, response, HTTPError, debug, redirect, HTTPResponse, error
 import mimetypes, time
+import statistics
 
 from database import COMP249Db
 import users
@@ -148,7 +149,7 @@ def submission(hash, filename):
 
 
 @application.route('/feedback')
-def feedback():
+def feedback_form():
     """Serve a feedback form"""
 
     return template('voteform.html')
@@ -209,16 +210,64 @@ def logout():
     return "Redirect"
 
 
-@application.route('/admin/report')
+
+@application.route('/top10')
 def report():
-    """Generate a marking report"""
+    """Generate a page showing the top 10 submissions"""
 
     db = COMP249Db()
 
     marks = users.mark_report(db)
     stats = users.stats(db)
 
+    return template("top10", marks=marks, stats=stats)
+
+
+
+
+@application.route('/admin/report')
+def report():
+    """Generate a marking report"""
+
+    db = COMP249Db()
+
+    marks = users.mark_dump(db)
+    users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
+    users.aggregate_scores(marks, 'mean', statistics.mean)
+    users.aggregate_scores(marks, 'stdev', statistics.stdev)
+    stats = users.stats(db)
+
     return template("report", marks=marks, stats=stats)
+
+import io
+import csv
+
+@application.route('/admin/report.csv')
+def reportcsv():
+    """Generate a marking report"""
+
+    db = COMP249Db()
+
+    marks = users.mark_dump(db)
+    users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
+    users.aggregate_scores(marks, 'mean', statistics.mean)
+    users.aggregate_scores(marks, 'stdev', statistics.stdev)
+
+    rows = []
+    for sid in marks:
+        feedback = '\n'.join([f for f in marks[sid]['feedback'] if f != ''])
+        rows.append((sid, marks[sid]['discard_lowest'], marks[sid]['mean'], marks[sid]['stdev'], feedback))
+
+    si = io.StringIO()
+    writer = csv.writer(si)
+    writer.writerows(rows)
+
+    response.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    response.headers["Content-type"] = "text/csv"
+
+    return si.getvalue()
+
+
 
 @application.route('/admin/view/<sid>/<filename:path>')
 def view_sid(sid, filename):
@@ -236,12 +285,10 @@ def view_sid(sid, filename):
     if not os.path.exists(os.path.join(root, 'index.html')):
 
         for dirpath, dirnames, filenames in os.walk(root):
-            print(dirpath, filenames)
             if 'index.html' in filenames:
                 root = dirpath
                 break
 
-    #print("PATH:", root)
 
     return static_file_force(filename=filename, root=root)
 

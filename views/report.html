@@ -23,20 +23,27 @@
         <tr>
             <th>Student</th>
             <th>Count</th>
-            <th>Design</th>
-            <th>Creative</th>
-            <th>Technology</th>
-            <th>Total</th>
+            <th>Mean</th>
+            <th>StdDev</th>
+            <th>Discard</th>
         </tr>
         </thead>
-% for row in marks:
+% for key in marks:
     <tr>
-        <th><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></th>
-        <td>{{round(row[1],1)}}</td>
-        <td>{{round(row[2],1)}}</td>
-        <td>{{round(row[3],1)}}</td>
-        <td>{{round(row[4],1)}}</td>
-        <td>{{round((row[2]+row[3]+row[4])/3, 1)}}</td>
+        <th><a href="/admin/view/{{key}}/index.html">{{key}}</a></th>
+        <td>{{len(marks[key]['scores']) }}</td>
+        <td>{{round(marks[key]['mean'],1)}}</td>
+        <td>{{round(marks[key]['stdev'],1)}}</td>
+        <td>{{round(marks[key]['discard_lowest'],1)}}</td>
+        <td>
+            <ul>
+            % for fb in marks[key]['feedback']:
+                % if fb != '':
+                  <li>{{fb}}</li>
+                % end
+            % end
+            </ul>
+        </td>
     </tr>
 % end
     </table>
