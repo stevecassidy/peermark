@@ -182,7 +182,7 @@ def submission_path(db, sid):
         return None
 
 
-def add_marks(db, useremail, design, creative, tech, feedback):
+def add_marks(db, useremail, design, creative, tech, feedback, browser):
     """Add a mark from useremail for the submission by sid
     """
 
@@ -191,10 +191,10 @@ def add_marks(db, useremail, design, creative, tech, feedback):
     if sid == "COMPLETED":
         return
 
-    sql = "INSERT INTO marks (submission, voter, design, creative, tech, feedback) VALUES (?,?,?,?,?,?)"
+    sql = "INSERT INTO marks (submission, voter, design, creative, tech, feedback, browser) VALUES (?,?,?,?,?,?,?)"
 
     cursor = db.cursor()
-    cursor.execute(sql, (sid, useremail, design, creative, tech, feedback))
+    cursor.execute(sql, (sid, useremail, design, creative, tech, feedback, browser))
 
     db.commit()
 
@@ -229,7 +229,7 @@ def mark_dump(db):
 
         """
 
-    sql = """SELECT submission, voter, design, creative, tech, feedback
+    sql = """SELECT submission, voter, design, creative, tech, feedback, browser
     FROM marks
     ORDER BY submission"""
 
@@ -241,15 +241,18 @@ def mark_dump(db):
     for row in cursor:
         if not sid == row[0]:
             if sid is not None:
-                result[sid] = {'scores': scores, 'feedback': feedback}
+                result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
             sid = row[0]
             scores = []
             feedback = []
+            browser = []
 
         scores.append((row[2], row[3], row[4]))
         feedback.append(row[5])
+        browser.append(row[6])
 
-    result[sid] = {'scores': scores, 'feedback': feedback}
+    result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
+    print(sid, result[sid])
 
     return result
 
@@ -302,9 +305,14 @@ def aggregate_scores(results, resultkey, fn):
 
     for key in results:
         scores = results[key]['scores']
-        d = fn([s[0] for s in scores])
-        c = fn([s[1] for s in scores])
-        t = fn([s[2] for s in scores])
+        if len(scores) == 1:
+            d = scores[0][0]
+            c = scores[0][1]
+            t = scores[0][2]
+        else:
+            d = fn([s[0] for s in scores])
+            c = fn([s[1] for s in scores])
+            t = fn([s[2] for s in scores])
 
         score = (d+c+t)/3
 

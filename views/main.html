@@ -1,11 +1,72 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
-<title>COMP249 Assignment 1 2007: Peer Marking</title>
+    <title>COMP249 Peer Marking</title>
+    <link rel='stylesheet' type='text/css' href='/static/peer.css'>
+    <script language="javascript" src="/static/peermark.js"></script>
 </head>
 
-<frameset rows="100,*">
-   <frame src="/feedback" name="voteframe"/>
-   <frame src="/submission/" name="sample"/>
-</frameset>
+
+<div id="voteframe">
+    <p id="help"><a target='_blank' href='/help.html'>Help</a>
+    <a id="ownlink" href="javascript:viewSelf()">View Your Submission</a>
+    </p>
+
+    <div>
+    <form id='voteform' name="vote" method="POST" action="/feedback">
+
+        <fieldset>
+            <legend>Design</legend>
+            <ul class="likert">
+                <li> Poor <input type="radio" name="design" value="1" />
+                <li><input type="radio" name="design" value="2" />
+                <li><input type="radio" name="design" value="3" />
+                <li><input type="radio" name="design" value="4" />
+                <li><input type="radio" name="design" value="5" /> Good
+            </ul>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>HTML/CSS</legend>
+            <ul class="likert">
+                <li> Poor <input type="radio" name="tech" value="1" />
+                <li><input type="radio" name="tech" value="2" />
+                <li><input type="radio" name="tech" value="3" />
+                <li><input type="radio" name="tech" value="4" />
+                <li><input type="radio" name="tech" value="5" /> Good
+            </ul>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>Creativity</legend>
+            <ul class="likert">
+                <li> Poor <input type="radio" name="creative" value="1" />
+                <li><input type="radio" name="creative" value="2" />
+                <li><input type="radio" name="creative" value="3" />
+                <li><input type="radio" name="creative" value="4" />
+                <li><input type="radio" name="creative" value="5" /> Good
+            </ul>
+        </fieldset>
+
+
+
+
+      <fieldset>
+          <legend>Feedback</legend>
+          <textarea name='feedback' placeholder="Comments for the student..."></textarea>
+      </fieldset>
+
+      <input type="submit" value="Vote"/>
+    </form>
+    </div>
+    <p id="footnote">If the page looks odd, refresh your browser or
+        <a target="new" href="/submission/">open the page in a new window</a>.
+    If something is wrong score 3xPoor and leave a comment about the problem.</p>
+</div>
+
+<iframe id="sample" src="/submission/">
+
+</iframe>
 
 </html>

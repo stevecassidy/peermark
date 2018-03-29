@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mark Report</title>
+    <title>COMP249 Assignment 1: Top 10</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
 <body>
 
+
+     <div class="container">
+
+
     <h1>Marking Report</h1>
 
-    <table>
+    <table class="table">
         <tbody>
         <tr><th>Number of Submissions</th><td>{{stats['students']}}</td></tr>
         <tr><th>Number Marked</th><td>{{stats['marked']}}</td></tr>
@@ -18,7 +24,7 @@
 
     <h2>Marks</h2>
 
-    <table>
+    <table class="table">
         <thead>
         <tr>
             <th>Student</th>
@@ -26,6 +32,8 @@
             <th>Mean</th>
             <th>StdDev</th>
             <th>Discard</th>
+            <th>Feedback</th>
+            <th>User-Agent</th>
         </tr>
         </thead>
 % for key in marks:
@@ -44,6 +52,15 @@
             % end
             </ul>
         </td>
+        <td>
+            <ul>
+            % for fb in marks[key]['browser']:
+                % if fb != '':
+                  <li>{{fb}}</li>
+                % end
+            % end
+            </ul>
+        </td>
     </tr>
 % end
     </table>
@@ -51,14 +68,20 @@
 
     <h2>Students with 1-1-1 marks</h2>
 
-    <table>
+    <table class="table">
         <tr><th>Student</th><th>Count</th></th></tr>
 % for row in stats['singletons']:
         <tr><td><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></td><td>{{row[1]}}</td></tr>
 % end
     </table>
 
+     <footer class="footer">
+         <hr>
+        <p class="pull-right">&copy; 2017 COMP249 Students</p>
+      </footer>
 
+     </div>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>

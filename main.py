@@ -109,6 +109,8 @@ def submission_self(filename):
     useremail = users.session_user(db)
     root = users.submission_path(db, users.user_sid(db, useremail))
 
+    print(useremail, root)
+
     # root should contain index.html, if not, look deeper
     if not os.path.exists(os.path.join(root, 'index.html')):
 
@@ -147,14 +149,6 @@ def submission(hash, filename):
     return static_file_force(filename=filename, root=root)
 
 
-
-@application.route('/feedback')
-def feedback_form():
-    """Serve a feedback form"""
-
-    return template('voteform.html')
-
-
 @application.post('/feedback')
 def add_feedback():
     """Handle feedback form submission"""
@@ -167,13 +161,15 @@ def add_feedback():
         tech = int(request.forms.get('tech'))
         creative = int(request.forms.get('creative'))
         feedback = request.forms.get('feedback')
+        # browser info from request
+        browser = request.get_header("User-Agent")
 
-        users.add_marks(db, useremail, design, tech, creative, feedback)
+        users.add_marks(db, useremail, design, tech, creative, feedback, browser)
     except:
         pass #
 
 
-    return redirect('/feedback')
+    return redirect('/')
 
 @application.post('/login')
 def login():

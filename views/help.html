@@ -1,11 +1,17 @@
-<html>
-  <head>
-    <title>COMP249 Assignment 1 Peer Marking</title>
-    <link rel="stylesheet" href="/static/peer.css" type="text/css">
-  </head>
-  <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COMP249 Assignment 1</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
 
-    <div class="content">
+
+     <div class="container">
+
+
 
 % if defined('message'):
     <p>{{message}}</p>
@@ -16,7 +22,7 @@
 
         <table style="width:30%">
             <tr>
-              <td><input type="text" name='email' size="40" placeholder="Student Email"></td>
+              <td><input type="text" name='email' size="40" class="form-control" placeholder="Student Email"></td>
               <td><input type="password" name='sid' class="form-control" placeholder="Student ID"></td>
                 <td><input type="submit" class="btn btn-default" value='Login' ></td>
             </tr>
@@ -35,14 +41,21 @@
         and your student ID as a password.  Of course, if you know someone else's
         email and student ID you could
       vote for them, but that wouldn't be nice. If you think someone has
-      impersonated you, please let me know.</p>
+      impersonated you, please let me know.  I keep full logs of access
+      to this site so can try to track down misuse.</p>
       
-      <p>Once you login, you will see a page with two frames. At the top is a marking
+      <p>Once you login, you will see a page in two parts. At the top is a marking
         form, at the bottom is one of the submissions from another student.
+          The submission is embedded in an iframe so it is possible that it will
+          look odd.  If something does not look right you should try refreshing
+          the page or clicking the link to view the submission in a separate
+          window.
+      </p>
+
+          <p>
         You are asked to review the submission and provide a mark on three criteria.
         When you submit your marks, another submission will be chosen for you to mark.
-        You will only be allowed to mark 20
-      submissions at most.</p>
+        You will only be allowed to mark 20 submissions at most.</p>
 
       <p>You are asked to rate the stylesheet on three criteria:</p>
       
@@ -81,5 +94,6 @@
       <p>Please send comments or problems to <a
       href="mailto:Steve.Cassidy@mq.edu.au">Steve Cassidy</a></p>
 
-  </body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
 </html>

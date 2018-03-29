@@ -80,6 +80,7 @@ CREATE TABLE marks (
             creative integer,
             tech integer,
             feedback text,
+            browser text,
             FOREIGN KEY(submission) REFERENCES users(sid),
             FOREIGN KEY(voter) REFERENCES users(email)
 );"""

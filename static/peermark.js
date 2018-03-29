@@ -1,23 +1,17 @@
 
-function reloadMainFrame() {
-	
-   var oframe = parent.sample
-   
-   oframe.location = "/submission/";
-   oframe.location.reload(true);
-}
+
 
 function showHelpMainFrame() {
-   var oframe = parent.sample;
+   var iframe = document.getElementById('sample');
    
-   oframe.location = "/static/help.html";
+   iframe.location = "/help.html";
    
 }
 
 function viewSelf() {
 
-   form = document.getElementById("voteform");
-
+   var form = document.getElementById("voteform");
+   var iframe = document.getElementById('sample');
 
    if (form.style.display == "none") {
 
@@ -25,11 +19,12 @@ function viewSelf() {
 
        document.getElementById("ownlink").innerHTML = "View Your Submission";
 
-       parent.sample.location = "/submission/";
+       iframe.src = "/submission/";
 
    } else {
 
-       parent.sample.location = "/self/index.html";
+       /* add a timestamp to the url to avoid cache hits */
+       iframe.src = "/self/index.html?r=" + (new Date()).getTime();
 
        form.style.display = "none";
 

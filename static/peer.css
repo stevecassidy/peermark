@@ -1,22 +1,47 @@
 
 body {
-  background-color: #CCA;
-  font-family: Arial, sans-serif;
-  font-size: 11pt;
+
 }
-table {
-	width: 80%;
+#voteframe {
+    font-family: Arial, sans-serif;
+    font-size: 11pt;
+    height: 100px;
+    background-color: #CCC;
+    margin: 10px;
+    padding: 10px;
 }
 
-td {
-	text-align: center;
+@media (max-width: 1300px) {
+
+   #voteframe {
+    height: 150px;
+   }
+
 }
-td.radio {
-	border: 1px solid black;
+
+
+@media (max-width: 900px) {
+
+   #voteframe {
+    height: 200px;
+   }
+
 }
-td textarea {
-	width: 100%;
+
+@media (max-width: 630px) {
+
+   #voteframe {
+    height: 300px;
+   }
+
 }
+
+#sample {
+    margin: auto;
+    width: 100%;
+    height: 90%;
+}
+
 #help {
 	font-size: small;
 	float: right;
