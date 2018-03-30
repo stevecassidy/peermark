@@ -7,18 +7,52 @@ Created on Mar 28, 2016
 from bottle import Bottle, template, static_file, request, response, HTTPError, debug, redirect, HTTPResponse, error
 import mimetypes, time
 import statistics
+import os
 
 from database import COMP249Db
 import users
 
-
 # for deployment we need to make sure we're in the right directory
 import os
-if not __name__=='__main__':
+
+if not __name__ == '__main__':
     os.chdir(os.path.dirname(__file__))
 
 application = Bottle()
-debug()
+
+
+def get_case_insensitive_path(path):
+    """Return a tuple of (path, exists) where
+    path is a possibly corrected path name and exists
+    is True if we found the file and False otherwise
+    """
+
+    if os.path.exists(path):
+        return path, True
+
+    d, f = os.path.split(path)
+
+    # if d is not empty, we need to recurse to get it's name
+    if not d == '':
+        # recurse on dirname if not empty
+        d, found = get_case_insensitive_path(d)
+
+        if not found:
+            return path, False
+
+    # now d is either empty or a valid directory path
+    # try to find the file
+    if d == '':
+        d = '.'
+    files = os.listdir(d)
+
+    for fname in files:
+        if fname.lower() == f.lower():
+            return os.path.join(d, fname), True
+
+    # we didn't find it
+    return path, False
+
 
 def static_file_force(filename, root):
     """ A version of static_file that will never return a
@@ -26,15 +60,18 @@ def static_file_force(filename, root):
     the latest version of a student submission file.
     """
 
-    charset='UTF-8'
+    charset = 'UTF-8'
 
     root = os.path.abspath(root) + os.sep
     filename = os.path.abspath(os.path.join(root, filename.strip('/\\')))
     headers = dict()
 
+    # in case the filename has a different case
+    filename, exists = get_case_insensitive_path(filename)
+
     if not filename.startswith(root):
         return HTTPError(403, "Access denied.")
-    if not os.path.exists(filename) or not os.path.isfile(filename):
+    if not exists or not os.path.isfile(filename):
         return error404("File does not exist.")
     if not os.access(filename, os.R_OK):
         return HTTPError(403, "You do not have permission to access this file.")
@@ -57,6 +94,7 @@ def static_file_force(filename, root):
     return HTTPResponse(body, **headers)
 
 
+
 @error(404)
 def error404(error):
     """Custom 404 Page"""
@@ -67,6 +105,7 @@ def error404(error):
 @application.route('/static/<filename:path>')
 def static(filename):
     return static_file(filename=filename, root='static')
+
 
 @application.route('/')
 def home():
@@ -85,6 +124,7 @@ def home():
 @application.route('/help.html')
 def help():
     return template('help')
+
 
 @application.route('/submission/')
 def submission_redirect():
@@ -109,8 +149,6 @@ def submission_self(filename):
     useremail = users.session_user(db)
     root = users.submission_path(db, users.user_sid(db, useremail))
 
-    print(useremail, root)
-
     # root should contain index.html, if not, look deeper
     if not os.path.exists(os.path.join(root, 'index.html')):
 
@@ -120,8 +158,6 @@ def submission_self(filename):
                 break
 
     return static_file_force(filename=filename, root=root)
-
-
 
 
 @application.route('/submission/<hash>/<filename:path>')
@@ -166,10 +202,10 @@ def add_feedback():
 
         users.add_marks(db, useremail, design, tech, creative, feedback, browser)
     except:
-        pass #
-
+        pass  #
 
     return redirect('/')
+
 
 @application.post('/login')
 def login():
@@ -192,6 +228,7 @@ def login():
     else:
         return template('login', title='Login Error', message='Login Failed, please try again')
 
+
 @application.post('/logout')
 def logout():
     """Process a logout request"""
@@ -206,7 +243,6 @@ def logout():
     return "Redirect"
 
 
-
 @application.route('/top10')
 def report():
     """Generate a page showing the top 10 submissions"""
@@ -217,8 +253,6 @@ def report():
     stats = users.stats(db)
 
     return template("top10", marks=marks, stats=stats)
-
-
 
 
 @application.route('/admin/report')
@@ -235,8 +269,10 @@ def report():
 
     return template("report", marks=marks, stats=stats)
 
+
 import io
 import csv
+
 
 @application.route('/admin/report.csv')
 def reportcsv():
@@ -264,7 +300,6 @@ def reportcsv():
     return si.getvalue()
 
 
-
 @application.route('/admin/view/<sid>/<filename:path>')
 def view_sid(sid, filename):
     """Serve up the submission from a particular student"""
@@ -285,11 +320,8 @@ def view_sid(sid, filename):
                 root = dirpath
                 break
 
-
     return static_file_force(filename=filename, root=root)
 
 
-
-if __name__=='__main__':
-
+if __name__ == '__main__':
     application.run()
