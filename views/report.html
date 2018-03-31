@@ -54,9 +54,9 @@
         </td>
         <td>
             <ul>
-            % for fb in marks[key]['browser']:
-                % if fb != '':
-                  <li>{{fb}}</li>
+            % for b in marks[key]['browser']:
+                % if b != '':
+                  <li>{{b[:20]}}</li>
                 % end
             % end
             </ul>
