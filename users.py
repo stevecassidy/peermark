@@ -252,7 +252,6 @@ def mark_dump(db):
         browser.append(row[6])
 
     result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
-    print(sid, result[sid])
 
     return result
 
