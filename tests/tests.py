@@ -176,11 +176,10 @@ class Test(unittest.TestCase):
         # add marks for this submission, should have the effect of
         # choosing another submission for this user to mark
         for dd in range(3):
-            users.add_marks(self.db, email, dd, dd, dd, "Good Work!")
+            users.add_marks(self.db, email, dd, dd, dd, "Good Work!", "Test Browser")
             newsub = users.user_viewing(self.db, email)
             self.assertNotEqual(sub, newsub)
             sub = newsub
-            print("SUB", sub)
 
 
 

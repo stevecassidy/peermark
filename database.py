@@ -39,7 +39,6 @@ class COMP249Db():
         """Destroy the database file"""
         pass
 
-
     def encode(self, text):
         """Return a one-way hashed version of the text suitable for
         storage in the database"""
@@ -87,7 +86,6 @@ CREATE TABLE marks (
 
         self.conn.executescript(sql)
         self.conn.commit()
-
 
     def import_users(self, csvfile, paths):
         """Import student accounts from csvfile
