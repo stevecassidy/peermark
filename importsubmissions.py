@@ -1,6 +1,6 @@
 
 
-from pyunitgrading import unpack_submissions
+from pyunitgrading import scan_or_unpack_submissions
 
 import sys
 import os
@@ -22,7 +22,7 @@ if __name__=='__main__':
 
     args = Parser()
 
-    unpacked, problems = unpack_submissions(args.zipfile, args.targetdir, expectzip=True)
+    unpacked, problems = scan_or_unpack_submissions(args.zipfile, args.targetdir, expectzip=True)
 
     if problems != []:
         print("PROBLEMS")
