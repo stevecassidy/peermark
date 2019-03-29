@@ -111,9 +111,12 @@ CREATE TABLE marks (
                     usersid = cursor.fetchone()
 
                     if usersid == None:
-                        path = paths[sid]
-                        cursor.execute(sql, (email, sid, path, hash))
-                        print(email, sid, path, hash)
+                        if sid in paths:
+                            path = paths[sid]
+                            cursor.execute(sql, (email, sid, path, hash))
+                            print(email, sid, path, hash)
+                        else:
+                            print("No entry for sid=", sid)
 
 
 
