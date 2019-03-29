@@ -1,5 +1,7 @@
 import os
-
+import mimetypes
+import time
+from bottle import HTTPError, request, HTTPResponse, template
 
 def get_case_insensitive_path(path):
     """Return a tuple of (path, exists) where
@@ -52,7 +54,7 @@ def static_file_force(filename, root):
     if not filename.startswith(root):
         return HTTPError(403, "Access denied.")
     if not exists or not os.path.isfile(filename):
-        return error404("File does not exist.")
+        return template("404")
     if not os.access(filename, os.R_OK):
         return HTTPError(403, "You do not have permission to access this file.")
 

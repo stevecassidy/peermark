@@ -34,6 +34,5 @@ if __name__=='__main__':
         paths[sid] = os.path.abspath(os.path.join(args.targetdir, sid))
 
     db = COMP249Db()
-
     db.import_users(args.csvfile, paths)
 

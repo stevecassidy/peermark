@@ -102,6 +102,16 @@ def user_marked(db, useremail):
     return [r[0] for r in cursor.fetchall()]
 
 
+def list_submissions(db):
+    """Return a list of all submissions"""
+
+    sql = "SELECT sid FROM users ORDER BY sid"
+
+    cursor = db.cursor()
+    cursor.execute(sql)
+
+    return [r[0] for r in cursor.fetchall()]
+
 def choose_submission(db, useremail):
     """Choose a random submission for a user and
         update the sessions table"""
@@ -235,6 +245,9 @@ def mark_dump(db):
 
     cursor = db.cursor()
     cursor.execute(sql)
+    scores = []
+    feedback = []
+    browser = []
 
     result = {}
     sid = None
@@ -251,7 +264,8 @@ def mark_dump(db):
         feedback.append(row[5])
         browser.append(row[6])
 
-    result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
+    if sid:
+        result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
 
     return result
 

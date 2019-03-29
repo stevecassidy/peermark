@@ -104,7 +104,6 @@ CREATE TABLE marks (
                 email = row['Email address']
                 sid = row['ID number']
                 hash = self.encode(sid)
-
                 if row['Status'].startswith("Submitted"):
 
                     cursor.execute(usersql, (sid,))

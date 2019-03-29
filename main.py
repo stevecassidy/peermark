@@ -76,15 +76,8 @@ def submission_self(filename):
     useremail = users.session_user(db)
     root = users.submission_path(db, users.user_sid(db, useremail))
 
-    # root should contain index.html, if not, look deeper
-    if not os.path.exists(os.path.join(root, 'index.html')):
+    return serve_submitted_file(root, filename)
 
-        for dirpath, dirnames, filenames in os.walk(root):
-            if 'index.html' in filenames:
-                root = dirpath
-                break
-
-    return static_file_force(filename=filename, root=root)
 
 
 @application.route('/submission/<hash>/<filename:path>')
@@ -101,15 +94,37 @@ def submission(hash, filename):
 
     root = users.submission_path(db, viewing)
 
+
+    return serve_submitted_file(root, filename)
+
+
+@application.route('/admin/view/<sid>/<filename:path>')
+def view_sid(sid, filename):
+    """Serve up the submission from a particular student"""
+
+    db = COMP249Db()
+
+    root = users.submission_path(db, sid)
+
+    return serve_submitted_file(root, filename)
+
+
+def serve_submitted_file(root, filename):
+
+    # serve up a fixed index.html file, same for everyone
+    if filename == 'index.html':
+        return static_file(filename, root='reference')
+
     # root should contain index.html, if not, look deeper
-    if not os.path.exists(os.path.join(root, 'index.html')):
+    if not os.path.exists(os.path.join(root, 'style.css')):
 
         for dirpath, dirnames, filenames in os.walk(root):
-            if 'index.html' in filenames:
+            if 'style.css' in filenames:
                 root = dirpath
                 break
 
     return static_file_force(filename=filename, root=root)
+
 
 
 @application.post('/feedback')
@@ -189,13 +204,24 @@ def report():
     db = COMP249Db()
 
     marks = users.mark_dump(db)
-    users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
-    users.aggregate_scores(marks, 'mean', statistics.mean)
-    users.aggregate_scores(marks, 'stdev', statistics.stdev)
-    stats = users.stats(db)
+    if marks != []:
+        users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
+        users.aggregate_scores(marks, 'mean', statistics.mean)
+        users.aggregate_scores(marks, 'stdev', statistics.stdev)
+        stats = users.stats(db)
+    else:
+        stats = []
 
     return template("report", marks=marks, stats=stats)
 
+@application.route('/admin/all')
+def showall():
+
+    db = COMP249Db()
+
+    submissions = users.list_submissions(db)
+
+    return template("allsubmissions", submissions=submissions)
 
 @application.route('/admin/report.csv')
 def reportcsv():
@@ -222,28 +248,6 @@ def reportcsv():
 
     return si.getvalue()
 
-
-@application.route('/admin/view/<sid>/<filename:path>')
-def view_sid(sid, filename):
-    """Serve up the submission from a particular student"""
-
-    db = COMP249Db()
-
-    root = users.submission_path(db, sid)
-
-    # temp hack to re-root submissions
-    root = os.path.basename(root)
-    root = os.path.join('submissions', root)
-
-    # root should contain index.html, if not, look deeper
-    if not os.path.exists(os.path.join(root, 'index.html')):
-
-        for dirpath, dirnames, filenames in os.walk(root):
-            if 'index.html' in filenames:
-                root = dirpath
-                break
-
-    return static_file_force(filename=filename, root=root)
 
 
 if __name__ == '__main__':
