@@ -40,7 +40,7 @@
         </thead>
 % for key in marks:
     <tr>
-        <th><a href="/admin/view/{{key}}/index.html">{{key}}</a></th>
+        <th><a href="/admin/view/{{key}}">{{key}}</a></th>
         <td>{{len(marks[key]['scores']) }}</td>
         <td>{{round(marks[key]['mean'],1)}}</td>
         <td>{{round(marks[key]['stdev'],1)}}</td>
@@ -73,7 +73,7 @@
     <table class="table">
         <tr><th>Student</th><th>Count</th></th></tr>
 % for row in stats['singletons']:
-        <tr><td><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></td><td>{{row[1]}}</td></tr>
+        <tr><td><a href="/admin/view/{{row[0]}}">{{row[0]}}</a></td><td>{{row[1]}}</td></tr>
 % end
     </table>
 

@@ -112,6 +112,7 @@ def list_submissions(db):
 
     return [r[0] for r in cursor.fetchall()]
 
+
 def choose_submission(db, useremail):
     """Choose a random submission for a user and
         update the sessions table"""
@@ -125,8 +126,7 @@ def choose_submission(db, useremail):
     cursor.execute(sql)
     exclude.extend([r[0] for r in cursor.fetchall()])
 
-
-    if number_marked > MAX_MARKED:
+    if number_marked >= MAX_MARKED:
         chosen = 'COMPLETED'
     else:
         # choose a user who isn't me who I haven't rated before
@@ -145,6 +145,7 @@ def choose_submission(db, useremail):
     #print("Choosing: ", useremail, chosen)
     db.commit()
 
+
 def user_viewing(db, useremail):
     """Return the sid that this user is supposed to be
     viewing right now"""
@@ -159,6 +160,22 @@ def user_viewing(db, useremail):
     else:
         # we didn't find the session, so we can't say who this is
         return 'unknown'
+
+
+def user_email(db, sid):
+    """Return the email for this sid"""
+
+    sql = "SELECT email FROM users WHERE sid=?"
+
+    cursor = db.cursor()
+    cursor.execute(sql, (sid,))
+
+    row = cursor.fetchone()
+    if row:
+        return row[0]
+    else:
+        # we didn't find the user, so return None
+        return None
 
 def user_sid(db, useremail):
     """Return the sid for this useremail"""

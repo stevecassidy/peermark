@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+    <title>COMP249 Peer Marking</title>
+    <link rel='stylesheet' type='text/css' href='/static/peer.css'>
+    <script language="javascript" src="/static/peermark.js"></script>
+</head>
+
+
+<body>
+<div class="voteform">
+    <h2>Student {{sid}} - {{email}}</h2>
+    <p>This view shows the submission as it will be viewed in the marking
+        page (embedded in an iframe.  To view in a new window
+        <a href="/admin/view/{{sid}}/index.html">Click Here</a>
+    </p>
+</div>
+
+
+<iframe id="sample" src="/admin/view/{{sid}}/index.html">
+
+</iframe>
+</body>
+</html>

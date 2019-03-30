@@ -94,8 +94,18 @@ def submission(hash, filename):
 
     root = users.submission_path(db, viewing)
 
-
     return serve_submitted_file(root, filename)
+
+
+@application.route('/admin/view/<sid>')
+def view_sid_embedded(sid):
+    """Serve a submission embedded in an iframe like the
+    marking page"""
+
+    db = COMP249Db()
+    email = users.user_email(db, sid)
+
+    return template("admin-iframe", sid=sid, email=email)
 
 
 @application.route('/admin/view/<sid>/<filename:path>')
