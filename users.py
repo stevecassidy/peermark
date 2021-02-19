@@ -6,14 +6,23 @@ Created on Mar 26, 2012
 
 import bottle
 import statistics
+import os
 
 # this variable MUST be used as the name for the cookie used by this application
 COOKIE_NAME = 'sessionid'
 
 MAX_MARKED = 20
+ADMIN_USER = 'admin'
+if 'ADMIN_PASSWORD' in os.environ:
+    ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
+else:
+    ADMIN_PASSWORD = ''
 
 def check_login(db, email, sid):
     """returns True if password matches stored"""
+
+    if ADMIN_PASSWORD != '' and email == ADMIN_USER and sid == ADMIN_PASSWORD:
+        return True
 
     cursor = db.cursor()
     # get the user details
@@ -37,13 +46,14 @@ def generate_session(db, useremail):
     # test to see whether we have one already
     cursor = db.cursor()
     # first check that this is a valid user
-    cursor.execute('select email from users where email=?', (useremail,))
-    row = cursor.fetchone()
-    if not row:
-        # unknown user
-        return None
+    if useremail != ADMIN_USER:  
+        cursor.execute('select email from users where email=?', (useremail,))
+        row = cursor.fetchone()
+        if not row:
+            # unknown user
+            return None
 
-    useremail = row[0]
+        useremail = row[0]
 
     cursor.execute('select sessionid from sessions where useremail=?', (useremail,))
     row = cursor.fetchone()

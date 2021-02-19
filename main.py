@@ -1,7 +1,7 @@
 '''
 Created on Mar 28, 2016
 
-@author: steve
+@author: Steve Cassidy
 '''
 
 from bottle import Bottle, template, static_file, request, response, HTTPError, debug, redirect, HTTPResponse, error
@@ -20,6 +20,35 @@ if not __name__ == '__main__':
     os.chdir(os.path.dirname(__file__))
 
 application = Bottle()
+
+def require_valid_user(viewfn):
+    """Decorator to ensure that a valid user is logged in
+    before a view can be rendered.  Redirect to login if not"""
+
+    def view(*args, **kwargs):
+        db = COMP249Db()
+        useremail = users.session_user(db)
+        if useremail:
+            return viewfn(db, useremail, *args, **kwargs)
+        else:
+            redirect('/')
+
+    return view
+
+def require_admin(viewfn):
+    """Decorator to ensure that admin is logged in
+    before a view can be rendered.  Redirect to login if not"""
+
+    def view(*args, **kwargs):
+        db = COMP249Db()
+        useremail = users.session_user(db)
+        if useremail == users.ADMIN_USER:
+            return viewfn(db, *args, **kwargs)
+        else:
+            redirect('/')
+
+    return view
+
 
 
 @error(404)
@@ -42,7 +71,10 @@ def home():
     db = COMP249Db()
 
     useremail = users.session_user(db)
-    if useremail:
+    print('useremail', useremail)
+    if useremail == users.ADMIN_USER:
+        return template('admin')
+    elif useremail:
         return template('main', title="Main")
     else:
         return template('help', title="Login", loginform=True)
@@ -54,13 +86,11 @@ def help():
 
 
 @application.route('/submission/')
-def submission_redirect():
+@require_valid_user
+def submission_redirect(db, useremail):
     """Redirect to the view of the currently allocated
     submission"""
 
-    db = COMP249Db()
-
-    useremail = users.session_user(db)
     viewing = users.user_viewing(db, useremail)
     hash = db.encode(viewing)
 
@@ -68,25 +98,18 @@ def submission_redirect():
 
 
 @application.route('/self/<filename:path>')
-def submission_self(filename):
+@require_valid_user
+def submission_self(db, useremail, filename):
     """Serve up pages from a student's own submission"""
 
-    db = COMP249Db()
-
-    useremail = users.session_user(db)
     root = users.submission_path(db, users.user_sid(db, useremail))
 
     return serve_submitted_file(root, filename)
 
-
-
 @application.route('/submission/<hash>/<filename:path>')
-def submission(hash, filename):
+@require_valid_user
+def submission(db, useremail, hash, filename):
     """Serve up pages from a student submission"""
-
-    db = COMP249Db()
-
-    useremail = users.session_user(db)
 
     viewing = users.user_viewing(db, useremail)
     if viewing == "COMPLETED":
@@ -98,21 +121,20 @@ def submission(hash, filename):
 
 
 @application.route('/admin/view/<sid>')
-def view_sid_embedded(sid):
+@require_admin
+def view_sid_embedded(db, sid):
     """Serve a submission embedded in an iframe like the
     marking page"""
 
-    db = COMP249Db()
     email = users.user_email(db, sid)
 
     return template("admin-iframe", sid=sid, email=email)
 
 
 @application.route('/admin/view/<sid>/<filename:path>')
-def view_sid(sid, filename):
+@require_admin
+def view_sid(db, sid, filename):
     """Serve up the submission from a particular student"""
-
-    db = COMP249Db()
 
     root = users.submission_path(db, sid)
 
@@ -138,13 +160,11 @@ def serve_submitted_file(root, filename):
 
 
 @application.post('/feedback')
-def add_feedback():
+@require_valid_user
+def add_feedback(db, useremail):
     """Handle feedback form submission"""
 
-    db = COMP249Db()
-
     try:
-        useremail = users.session_user(db)
         design = int(request.forms.get('design'))
         tech = int(request.forms.get('tech'))
         creative = int(request.forms.get('creative'))
@@ -173,10 +193,6 @@ def login():
         users.generate_session(db, email)
 
         redirect('/', 303)
-
-        response.status = 303
-        response.set_header('Location', '/')
-        return "Redirect"
     else:
         return template('login', title='Login Error', message='Login Failed, please try again')
 
@@ -208,10 +224,9 @@ def report():
 
 
 @application.route('/admin/report')
-def report():
+@require_admin
+def report(db):
     """Generate a marking report"""
-
-    db = COMP249Db()
 
     marks = users.mark_dump(db)
     if marks != []:
@@ -221,23 +236,21 @@ def report():
         stats = users.stats(db)
     else:
         stats = []
-
+    
     return template("report", marks=marks, stats=stats)
 
 @application.route('/admin/all')
-def showall():
-
-    db = COMP249Db()
+@require_admin
+def showall(db):
 
     submissions = users.list_submissions(db)
 
     return template("allsubmissions", submissions=submissions)
 
 @application.route('/admin/report.csv')
-def reportcsv():
+@require_admin
+def reportcsv(db):
     """Generate a marking report"""
-
-    db = COMP249Db()
 
     marks = users.mark_dump(db)
     users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
@@ -261,4 +274,4 @@ def reportcsv():
 
 
 if __name__ == '__main__':
-    application.run()
+    application.run(reloader=True)

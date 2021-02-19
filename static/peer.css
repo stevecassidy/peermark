@@ -1,14 +1,15 @@
 
 body {
-
-}
-#voteframe {
     font-family: Arial, sans-serif;
     font-size: 11pt;
-    height: 100px;
-    background-color: #CCC;
     margin: 10px;
     padding: 10px;
+}
+#voteframe {
+
+    height: 100px;
+    background-color: #CCC;
+
 }
 
 @media (max-width: 1300px) {

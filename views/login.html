@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>COMP2110/6110 Peer Marking: {{title}}</title>
+    <link rel='stylesheet' type='text/css' href='/static/peer.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
 <body>
-    <h1>{{title}}</h1>
 
-% if defined('message'):
-    <p>{{message}}</p>
-% end
 
-    <form id='loginform' class="navbar-form navbar-right" role="login" method='post' action='/login'>
-        <div class="form-group">
-          <input type="text" name='email' class="form-control" placeholder="Student Email">
-        </div>
-        <div class="form-group">
-          <input type="password" name='sid' class="form-control" placeholder="Student ID">
-        </div>
-        <input type="submit" class="btn btn-default" value='Login' >
-    </form>
+    <div class="col-md-6 col-md-offset-3">
+        <h1>{{title}}</h1>
+
+        % if defined('message'):
+            <p>{{message}}</p>
+        % end
+
+        <form id='loginform' role="login" method='post' action='/login'>
+            <div class="form-group">
+            <input type="text" name='email' class="form-control" placeholder="Student Email">
+            </div>
+            <div class="form-group">
+            <input type="password" name='sid' class="form-control" placeholder="Student ID">
+            </div>
+            <input type="submit" class="btn btn-default" value='Login' >
+        </form>
+    </div>  
 
 </body>
 </html>
