@@ -1,6 +1,5 @@
 
-
-from pyunitgrading import unpack_submissions
+from pyunitgrading import scan_or_unpack_submissions
 
 import sys
 import os
@@ -22,7 +21,7 @@ if __name__=='__main__':
 
     args = Parser()
 
-    unpacked, problems = unpack_submissions(args.zipfile, args.csvfile, args.targetdir, expectzip=True)
+    unpacked, problems = scan_or_unpack_submissions(args.zipfile, args.csvfile, args.targetdir, expectzip=True)
 
     if problems == ['fatal']:
         exit()
@@ -32,7 +31,7 @@ if __name__=='__main__':
         for problem in problems:
             print(problem)
 
-    paths = dict()
+    paths = dict() 
     for sid in unpacked:
         paths[sid] = os.path.abspath(os.path.join(args.targetdir, sid))
 

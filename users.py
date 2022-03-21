@@ -130,6 +130,7 @@ def choose_submission(db, useremail):
     exclude = user_marked(db, useremail)
     number_marked = len(exclude)
     cursor = db.cursor()
+    chosen = ''
 
     # find submissions marked more than 5 times so we can exclude them
     sql = "SELECT submission from (SELECT submission, count(voter) as count from marks group by submission) where count>5"
@@ -149,10 +150,12 @@ def choose_submission(db, useremail):
             if chosen not in exclude:
                 break
 
-    sql = "UPDATE sessions SET viewing=? WHERE useremail=?"
-    cursor.execute(sql, (chosen, useremail))
-
-    #print("Choosing: ", useremail, chosen)
+    if chosen:
+        sql = "UPDATE sessions SET viewing=? WHERE useremail=?"
+        cursor.execute(sql, (chosen, useremail))
+        print("Choosing: ", useremail, chosen)
+    else:
+        print("Nothing chosen for user",  useremail)
     db.commit()
 
 

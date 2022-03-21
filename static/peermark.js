@@ -15,7 +15,7 @@ function viewSelf() {
 
    if (form.style.display == "none") {
 
-       form.style.display = "block";
+       form.style.display = "flex";
 
        document.getElementById("ownlink").innerHTML = "View Your Submission";
 

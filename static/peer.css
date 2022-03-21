@@ -5,6 +5,7 @@ body {
     margin: 10px;
     padding: 10px;
 }
+
 #voteframe {
 
     height: 100px;
@@ -54,9 +55,13 @@ label {
 	float: left;
 }
 
+#voteform {
+    display: flex;
+    flex-direction: row;
+}
+
 fieldset
-{
-   float: left;
+{ 
    padding: 0;
    height: 3em;
 }

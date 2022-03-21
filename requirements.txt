@@ -1,2 +1,2 @@
 bottle
-https://github.com/stevecassidy/pyunitgrading
+git+https://github.com/stevecassidy/pyunitgrading.git

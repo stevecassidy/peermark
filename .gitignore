@@ -1,0 +1,7 @@
+subs
+__pycache__
+.vscode
+.idea
+comp249.db
+submissions
+venv

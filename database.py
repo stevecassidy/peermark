@@ -87,35 +87,26 @@ CREATE TABLE marks (
         self.conn.executescript(sql)
         self.conn.commit()
 
-    def import_users(self, csvfile, paths):
-        """Import student accounts from csvfile
-        paths is a dictionary of id->directory name
-        If csvfile doesn't exist, just make a sample account"""
+    def import_users(self, paths):
+        """Import student accounts
+        paths is a dictionary of email-> (password, directory name)
+        """
 
         cursor = self.cursor()
 
         sql = "INSERT into users (email, sid, path, hash) values (?, ?, ?, ?)"
 
-        usersql = "SELECT sid FROM users WHERE sid=?"
+        usersql = "SELECT email FROM users WHERE email=?"
+ 
+        for (email, (password, dirname)) in paths.items():
+                hash = self.encode(password) 
 
-        with open(csvfile) as fd:
-            reader = csv.DictReader(fd)
-            for row in reader:
-                email = row['Email address']
-                sid = row['ID number']
-                hash = self.encode(sid)
-                if row['Status'].startswith("Submitted"):
+                cursor.execute(usersql, (email,))
+                usersid = cursor.fetchone()
 
-                    cursor.execute(usersql, (sid,))
-                    usersid = cursor.fetchone()
-
-                    if usersid == None:
-                        if sid in paths:
-                            path = paths[sid]
-                            cursor.execute(sql, (email, sid, path, hash))
-                            print(email, sid, path, hash)
-                        else:
-                            print("No entry for sid=", sid)
+                if usersid == None: 
+                    cursor.execute(sql, (email, password, dirname, hash))
+                    print(email, password, dirname, hash) 
 
 
 

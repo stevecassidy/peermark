@@ -148,10 +148,10 @@ def serve_submitted_file(root, filename):
         return static_file(filename, root='reference')
 
     # root should contain index.html, if not, look deeper
-    if not os.path.exists(os.path.join(root, 'style.css')):
+    if not os.path.exists(os.path.join(root, 'index.html')):
 
         for dirpath, dirnames, filenames in os.walk(root):
-            if 'style.css' in filenames:
+            if 'index.html' in filenames:
                 root = dirpath
                 break
 
