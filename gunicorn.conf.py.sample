@@ -1,0 +1,5 @@
+bind = ['127.0.0.1:8810']
+raw_env = ["ADMIN_PASSWORD=secret"]
+workers = 4
+daemon = True
+pidfile = "gunicorn.pid"
