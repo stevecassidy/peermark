@@ -212,11 +212,11 @@ def logout():
 
 
 @application.route('/top10')
-def report():
+def top10():
     """Generate a page showing the top 10 submissions"""
 
     db = COMP249Db()
-
+    
     marks = users.mark_report(db)
     stats = users.stats(db)
 
