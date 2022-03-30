@@ -205,6 +205,19 @@ def user_sid(db, useremail):
         # we didn't find the user, so return None
         return None
 
+def get_users(db):
+    """Return a dictionary of sid -> email"""
+
+    sql = "SELECT sid, email FROM users"
+
+    cursor = db.cursor()
+    cursor.execute(sql)
+
+    result = dict()
+    for row in cursor:
+        result[row[0]]  = row[1]
+
+    return result
 
 def submission_path(db, sid):
     """Return the submission for this sid"""
@@ -249,8 +262,9 @@ def mark_report(db):
     (sid, count, design, creative, tech)
         """
 
-    sql = """SELECT submission, count(voter) as count, avg(design) as d, avg(creative) as c, avg(tech) as t
-    FROM marks
+    sql = """SELECT submission, count(voter) as count, avg(design) as d, avg(creative) as c, avg(tech) as t, email
+    FROM marks, users
+    WHERE users.sid = marks.submission
     GROUP BY submission
     ORDER BY d+c+t DESC"""
 
@@ -269,15 +283,16 @@ def mark_dump(db):
 
         """
 
-    sql = """SELECT submission, voter, design, creative, tech, feedback, browser
-    FROM marks
+    sql = """SELECT submission, voter, design, creative, tech, feedback, browser, email
+    FROM marks, users
+    WHERE users.sid = marks.submission
     ORDER BY submission"""
 
     cursor = db.cursor()
     cursor.execute(sql)
     scores = []
     feedback = []
-    browser = []
+    browser = [] 
 
     result = {}
     sid = None
@@ -285,11 +300,11 @@ def mark_dump(db):
         if not sid == row[0]:
             if sid is not None:
                 result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
-            sid = row[0]
+            sid = row[0] 
             scores = []
             feedback = []
             browser = []
-
+ 
         scores.append((row[2], row[3], row[4]))
         feedback.append(row[5])
         browser.append(row[6])

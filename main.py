@@ -228,6 +228,7 @@ def report():
 def report(db):
     """Generate a marking report"""
 
+    userlist = users.get_users(db)
     marks = users.mark_dump(db)
     if marks != []:
         users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
@@ -237,7 +238,7 @@ def report(db):
     else:
         stats = []
     
-    return template("report", marks=marks, stats=stats)
+    return template("report", marks=marks, stats=stats, users=userlist)
 
 @application.route('/admin/all')
 @require_admin
@@ -252,15 +253,17 @@ def showall(db):
 def reportcsv(db):
     """Generate a marking report"""
 
+    userlist = users.get_users(db)
     marks = users.mark_dump(db)
     users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
     users.aggregate_scores(marks, 'mean', statistics.mean)
     users.aggregate_scores(marks, 'stdev', statistics.stdev)
+    users.aggregate_scores(marks, 'count', len)
 
-    rows = []
+    rows = [['email', 'Github', 'Count', 'Discard Lowest', 'Mean', 'StDev', 'Feedback']]
     for sid in marks:
         feedback = '\n'.join([f for f in marks[sid]['feedback'] if f != ''])
-        rows.append((sid, marks[sid]['discard_lowest'], marks[sid]['mean'], marks[sid]['stdev'], feedback))
+        rows.append((userlist[sid], sid, marks[sid]['count'], marks[sid]['discard_lowest'], marks[sid]['mean'], marks[sid]['stdev'], feedback))
 
     si = io.StringIO()
     writer = csv.writer(si)

@@ -36,9 +36,9 @@
                 <th>Number of Peers who Marked</th>
             </tr>
             </thead>
-    % for row in marks[:10]:
+    % for row in marks[:20]:
         <tr>
-            <th><a href="/admin/view/{{row[0]}}/index.html">{{row[0]}}</a></th>
+            <th><a href="/admin/view/{{row[0]}}/index.html">{{row[5].split('.')[1].split('@')[0].capitalize()}}</a></th>
             <td>{{row[1]}}</td>
         </tr>
     % end
