@@ -106,7 +106,7 @@ CREATE TABLE marks (
 
                 if usersid == None: 
                     cursor.execute(sql, (email, password, dirname, hash))
-                    print(email, password, dirname, hash) 
+                    #print(email, password, hash) 
 
 
 

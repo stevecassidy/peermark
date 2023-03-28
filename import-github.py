@@ -30,12 +30,20 @@ def load_students(csvfile, targetdir):
             if row['roster_identifier']:
                 repodir = os.path.join(targetdir, row['github_username'])
                 if (os.path.exists(repodir)):
-                    cmd = check_output(["git", "log", "--oneline"], cwd=repodir).decode("utf8")
-                    count = len(cmd.split('\n'))
-                    if count > 2:
-                        result[row['roster_identifier']] = (row['github_username'], repodir)
-                    else:
-                        print("No commits for", row['github_username'])
+                    try:
+                        cmd = check_output(["git", "log", "--oneline"], cwd=repodir).decode("utf8")
+                        count = len(cmd.split('\n'))
+                        if count > 2:
+                            if 'password' in row:
+                                password = row['password']
+                            else:
+                                password = row['github_username']
+                            
+                            result[row['roster_identifier']] = (password, repodir)
+                        else:
+                            print("No commits for", row['github_username'])
+                    except: 
+                        print("failed to run git in ", repodir)
                 else:
                     print("No repo for ", row['roster_identifier'], row['github_username'])
             else:
