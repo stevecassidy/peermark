@@ -187,7 +187,7 @@ def login():
 
     email = request.forms.get('email')
     sid = request.forms.get('sid')
-
+ 
     if users.check_login(db, email, sid):
 
         users.generate_session(db, email)

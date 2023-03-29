@@ -28,6 +28,7 @@ def load_students(csvfile, targetdir):
         reader = csv.DictReader(input)
         for row in reader:
             if row['roster_identifier']:
+                email = row['roster_identifier']
                 repodir = os.path.join(targetdir, row['github_username'])
                 if (os.path.exists(repodir)):
                     try:
@@ -39,7 +40,7 @@ def load_students(csvfile, targetdir):
                             else:
                                 password = row['github_username']
                             
-                            result[row['roster_identifier']] = (password, repodir)
+                            result[email] = (email, password, repodir)
                         else:
                             print("No commits for", row['github_username'])
                     except: 

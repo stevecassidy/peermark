@@ -89,7 +89,7 @@ CREATE TABLE marks (
 
     def import_users(self, paths):
         """Import student accounts
-        paths is a dictionary of email-> (password, directory name)
+        paths is a dictionary of email-> (sid, password, directory name)
         """
 
         cursor = self.cursor()
@@ -98,14 +98,14 @@ CREATE TABLE marks (
 
         usersql = "SELECT email FROM users WHERE email=?"
  
-        for (email, (password, dirname)) in paths.items():
+        for (email, (sid, password, dirname)) in paths.items():
                 hash = self.encode(password) 
 
                 cursor.execute(usersql, (email,))
                 usersid = cursor.fetchone()
 
                 if usersid == None: 
-                    cursor.execute(sql, (email, password, dirname, hash))
+                    cursor.execute(sql, (email, sid, dirname, hash))
                     #print(email, password, hash) 
 
 
