@@ -29,7 +29,7 @@ def load_students(csvfile, targetdir):
         for row in reader:
             if row['roster_identifier']:
                 email = row['roster_identifier']
-                repodir = os.path.join(targetdir, row['github_username'])
+                repodir = os.path.join(targetdir, row['student_repository_name'])
                 if (os.path.exists(repodir)):
                     try:
                         cmd = check_output(["git", "log", "--oneline"], cwd=repodir).decode("utf8")
@@ -46,7 +46,7 @@ def load_students(csvfile, targetdir):
                     except: 
                         print("failed to run git in ", repodir)
                 else:
-                    print("No repo for ", row['roster_identifier'], row['github_username'])
+                    print("No repo for ", row['roster_identifier'], repodir)
             else:
                 print(row['github_username'], "has no student identifier")
 
