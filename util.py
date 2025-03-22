@@ -96,7 +96,6 @@ def static_file_force(filename, root):
         headers['Content-Type'] = mimetype
 
     stats = os.stat(filename)
-    headers['Content-Length'] = clen = stats.st_size
     lm = time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime(stats.st_mtime))
     headers['Last-Modified'] = lm
 
@@ -106,6 +105,7 @@ def static_file_force(filename, root):
     if 'css' in mimetype:
         body = body.read().decode('utf8')
         body = remove_comments(body)
+        headers['Content-Length'] = len(body)
 
     return HTTPResponse(body, **headers)
 
@@ -113,6 +113,4 @@ def static_file_force(filename, root):
 
 if __name__=='__main__':
 
-    print(get_case_insensitive_path('static/peersss.css'))
-    print(get_case_insensitive_path('static/PEER.css'))
-    print(get_case_insensitive_path('STATIC/peer.css'))
+    print(static_file_force('style.css', 'tmp'))

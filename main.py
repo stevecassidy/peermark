@@ -19,6 +19,14 @@ import os
 if not __name__ == '__main__':
     os.chdir(os.path.dirname(__file__))
 
+# are we in preview or marking mode?
+if os.environ.get('MODE') != None:
+    MODE = os.environ.get('MODE')
+else:
+    MODE = 'marking'
+
+print('mode is', MODE)
+
 application = Bottle()
 
 def require_valid_user(viewfn):
@@ -71,11 +79,13 @@ def home():
     db = COMP249Db()
 
     useremail = users.session_user(db)
-    print('useremail', useremail)
     if useremail == users.ADMIN_USER:
         return template('admin')
     elif useremail:
-        return template('main', title="Main")
+        if MODE == 'preview':
+            return template('preview', title="Preview", email=useremail)
+        else:
+            return template('main', title="Main", emaail=useremail)
     else:
         return template('help', title="Login", loginform=True)
 
@@ -234,10 +244,15 @@ def report(db):
         users.aggregate_scores(marks, 'discard_lowest', users.discard_lowest_avg)
         users.aggregate_scores(marks, 'mean', statistics.mean)
         users.aggregate_scores(marks, 'stdev', statistics.stdev)
+        users.aggregate_scores(marks, 'count', len)
         stats = users.stats(db)
     else:
         stats = []
     
+    for key in marks:
+        if  marks[key]['marked'] == 0:
+            print(key, marks[key]['count'], marks[key]['marked'])
+
     return template("report", marks=marks, stats=stats, users=userlist)
 
 @application.route('/admin/all')
@@ -260,10 +275,17 @@ def reportcsv(db):
     users.aggregate_scores(marks, 'stdev', statistics.stdev)
     users.aggregate_scores(marks, 'count', len)
 
-    rows = [['email', 'Github', 'Count', 'Discard Lowest', 'Mean', 'StDev', 'Feedback']]
+    rows = [['email', 'Github', 'Marked', 'Count', 'Discard Lowest', 'Mean', 'StDev', 'Feedback']]
     for sid in marks:
         feedback = '\n'.join([f for f in marks[sid]['feedback'] if f != ''])
-        rows.append((userlist[sid], sid, marks[sid]['count'], marks[sid]['discard_lowest'], marks[sid]['mean'], marks[sid]['stdev'], feedback))
+        rows.append((userlist[sid], 
+                     sid, 
+                     marks[sid]['marked'], 
+                     marks[sid]['count'], 
+                     marks[sid]['discard_lowest'], 
+                     marks[sid]['mean'], 
+                     marks[sid]['stdev'], 
+                     feedback))
 
     si = io.StringIO()
     writer = csv.writer(si)

@@ -68,7 +68,7 @@ If the students are using Github Classroom then the import process is slightly d
 
 First use the Github Classroom Desktop tool to export all repositories.  Then, download
 the grading file from the Github Classroom assignment (Green Download button, select download
-grades). 
+grades).
 
 If you wish to add a password for each student, add a column `password` to the CSV file before
 running the import script.

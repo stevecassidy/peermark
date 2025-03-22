@@ -28,6 +28,7 @@
         <thead>
         <tr>
             <th>Student</th>
+            <th>Marked</th>
             <th>Count</th>
             <th>Mean</th>
             <th>StdDev</th>
@@ -39,7 +40,8 @@
 % for key in marks:
     <tr>
         <th><a href="/admin/view/{{key}}">{{users[key]}}</a></th>
-        <td>{{len(marks[key]['scores']) }}</td>
+        <td>{{round(marks[key]['marked'],1)}}</td>
+        <td>{{round(marks[key]['count'],1)}}</td>
         <td>{{round(marks[key]['mean'],1)}}</td>
         <td>{{round(marks[key]['stdev'],1)}}</td>
         <td>{{round(marks[key]['discard_lowest'],1)}}</td>

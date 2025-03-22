@@ -57,6 +57,12 @@ label {
 	float: left;
 }
 
+
+#previewForm {
+    display: flex;
+    flex-direction: row;
+}
+
 #voteform {
     display: flex;
     flex-direction: row;

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+    <title>COMP2110/6110 Peer Marking</title>
+    <link rel='stylesheet' type='text/css' href='/static/peer.css'>
+</head>
+
+<div id="voteframe">
+    <p id="help">
+        <span id="user">{{email}}</span>
+        <a target='_blank' href='/help.html'>Help</a></p>
+
+    <div>
+    <form id='voteform' name="vote">
+
+        <fieldset>
+            <legend>Design</legend>
+            <ul class="likert">
+                <li> Poor <input type="radio" name="design" value="1" />
+                <li><input type="radio" name="design" value="2" />
+                <li><input type="radio" name="design" value="3" />
+                <li><input type="radio" name="design" value="4" />
+                <li><input type="radio" name="design" value="5" /> Good
+            </ul>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>CSS</legend>
+            <ul class="likert">
+                <li> Poor <input type="radio" name="tech" value="1" />
+                <li><input type="radio" name="tech" value="2" />
+                <li><input type="radio" name="tech" value="3" />
+                <li><input type="radio" name="tech" value="4" />
+                <li><input type="radio" name="tech" value="5" /> Good
+            </ul>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>Creativity</legend>
+            <ul class="likert">
+                <li> Poor <input type="radio" name="creative" value="1" />
+                <li><input type="radio" name="creative" value="2" />
+                <li><input type="radio" name="creative" value="3" />
+                <li><input type="radio" name="creative" value="4" />
+                <li><input type="radio" name="creative" value="5" /> Good
+            </ul>
+        </fieldset>
+
+      <fieldset>
+          <legend>Feedback</legend>
+          <textarea name='feedback' placeholder="Comments for the student..."></textarea>
+      </fieldset>
+
+      <fieldset>
+        <input type="submit" value="Vote"/>
+      </fieldset>
+    </form>
+    </div>
+    <p id="footnote">If the page looks odd, refresh your browser or
+        <a target="new" href="/self/index.html">open the page in a new window</a>.
+    This is a preview of the voting for with your current GitHub version.</p>
+</div>
+
+<iframe id="sample" src="/self/index.html">
+
+</iframe>
+
+<script>
+    document.querySelector('#voteform').addEventListener('submit', (event) => {
+        event.preventDefault();
+        alert("marking has not started yet");
+    });
+</script>
+</html>

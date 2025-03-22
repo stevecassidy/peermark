@@ -29,9 +29,11 @@ def check_login(db, email, sid):
     cursor.execute('select hash from users where email=?', (email,))
     row = cursor.fetchone()
     if row:
+        print('got user', email, sid)
         # check that password matches
         storedsid = row[0]
-        hashedsid = db.encode(sid) 
+        hashedsid = db.encode(sid)
+        print('stored', storedsid, 'hashed', hashedsid)
         return storedsid == hashedsid
     else:
         return False
@@ -154,7 +156,6 @@ def choose_submission(db, useremail):
     if chosen:
         sql = "UPDATE sessions SET viewing=? WHERE useremail=?"
         cursor.execute(sql, (chosen, useremail))
-        print("Choosing: ", useremail, chosen)
     else:
         print("Nothing chosen for user",  useremail)
     db.commit()
@@ -274,6 +275,18 @@ def mark_report(db):
 
     return cursor.fetchall()
 
+def user_marked_count(db):
+    """Return the number of submissions marked by each user"""
+
+    sql = "SELECT voter, count(voter) from marks group by voter"
+
+    cursor = db.cursor()
+    cursor.execute(sql)
+    result = {}
+    for row in cursor:
+        result[row[0]] = row[1]
+
+    return result
 
 def mark_dump(db):
     """Return a dictionary with one key per submission
@@ -312,6 +325,13 @@ def mark_dump(db):
 
     if sid:
         result[sid] = {'scores': scores, 'feedback': feedback, 'browser': browser}
+
+    marked = user_marked_count(db)
+    for key in result:
+        if key in marked:
+            result[key]['marked'] = marked[key]
+        else:
+            result[key]['marked'] = 0
 
     return result
 
