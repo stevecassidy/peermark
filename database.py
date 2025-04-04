@@ -98,6 +98,8 @@ CREATE TABLE marks (
 
         usersql = "SELECT email FROM users WHERE email=?"
  
+        updatepwsql = "UPDATE users SET hash=? WHERE email=?"
+
         for (email, (sid, password, dirname)) in paths.items():
                 hash = self.encode(password) 
 
@@ -107,6 +109,8 @@ CREATE TABLE marks (
                 if usersid == None: 
                     cursor.execute(sql, (email, sid, dirname, hash))
                     #print(email, password, hash) 
+                else:
+                    cursor.execute(updatepwsql, (hash, email))
 
 
 
