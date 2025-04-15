@@ -228,10 +228,8 @@ def logout():
 
 @application.route('/top')
 @require_valid_user
-def top10():
+def top10(db, useremail):
     """Generate a page showing the top 10 submissions"""
-
-    db = COMP249Db()
     
     marks = users.mark_report(db)
     stats = users.stats(db)
@@ -240,7 +238,7 @@ def top10():
 
 @application.route('/top/view/<n>/<filename:path>')
 @require_valid_user
-def top10_view(n, filename):
+def top10_view(db, useremail, n, filename):
     """Serve up the submission from a particular student for the top N view"""
 
     db = COMP249Db()
