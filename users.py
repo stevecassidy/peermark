@@ -29,7 +29,6 @@ def check_login(db, email, sid):
     cursor.execute('select hash from users where email=?', (email,))
     row = cursor.fetchone()
     if row:
-        print('got user', email, sid)
         # check that password matches
         storedsid = row[0]
         hashedsid = db.encode(sid)

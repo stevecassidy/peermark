@@ -84,6 +84,11 @@ def home():
     elif useremail:
         if MODE == 'preview':
             return template('preview', title="Preview", email=useremail)
+        elif MODE == 'top':
+
+            marks = users.mark_report(db)
+            stats = users.stats(db)
+            return template('top10',  marks=marks, stats=stats)
         else:
             return template('main', title="Main", emaail=useremail)
     else:
@@ -221,7 +226,7 @@ def logout():
     return "Redirect"
 
 
-@application.route('/top10')
+@application.route('/top')
 def top10():
     """Generate a page showing the top 10 submissions"""
 
