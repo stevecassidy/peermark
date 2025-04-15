@@ -227,6 +227,7 @@ def logout():
 
 
 @application.route('/top')
+@require_valid_user
 def top10():
     """Generate a page showing the top 10 submissions"""
 
@@ -236,6 +237,24 @@ def top10():
     stats = users.stats(db)
 
     return template("top10", marks=marks, stats=stats)
+
+@application.route('/top/view/<n>/<filename:path>')
+@require_valid_user
+def top10_view(n, filename):
+    """Serve up the submission from a particular student for the top N view"""
+
+    db = COMP249Db()
+    marks = users.mark_report(db)
+    # n is the index into the marks list
+    index = int(n)
+    if (index < 20 and index < len(marks)):
+        # get the sid from the marks list
+        sid = marks[index][0]
+        root = users.submission_path(db, sid)
+    else:
+        return redirect('/')
+
+    return serve_submitted_file(root, filename)
 
 
 @application.route('/admin/report')
